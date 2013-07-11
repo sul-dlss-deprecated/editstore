@@ -1,0 +1,59 @@
+= Editstore
+
+This project uses MIT-LICENSE.
+
+It provides models that allow your client web application to cache descriptive metadata updates in a special database.
+
+== Installation
+
+1. Add the following to your application's 'Gemfile':
+
+source 'http://sul-gems.stanford.edu'  # only if you don't already have it
+gem 'editstore'
+
+2. Install the gem
+
+bundle install
+
+3. Add the migrations to your app
+
+rake editstore:install:migrations
+
+4. Add development and test database connection stings to the 'database.yml' file in your app for development/test:
+
+editstore_development:
+  adapter: sqlite3
+  database: db/editstore_development.sqlite3
+  pool: 5
+  timeout: 5000
+    
+editstore_test:
+  adapter: sqlite3
+  database: db/editstore_test.sqlite3
+  pool: 5
+  timeout: 5000
+
+editstore_production:
+  adapter: mysql2
+  database: # GET IT FROM FRIENDLY SYSADMIN IF YOU NEED IT FOR PRODUCTION
+
+5. Generate a migration to store your project specific name and fields in your own test/dev databases:
+
+rails g migration editstore_myproject
+
+6. Edit your migration to add your project name and fields.  Be sure to have the migration use the correct Editstore database
+connection string as shown below.  For production, these changes will need to be in the correct Editstore database as well.
+
+def up
+  @connection=Editstore::Connection.connection
+  project=Editstore::Project.create(:name=>'my_project',:template=>'my_project')
+  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
+  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
+end
+
+7. Run the migrations
+
+rake db:migrate 
+
+== Usage
+
