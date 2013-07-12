@@ -4,12 +4,13 @@ module Editstore
   class Change < Connection
     belongs_to :state
     belongs_to :project
-    attr_accessible :field,:old_value,:new_value,:operation,:client_note,:druid
+    attr_accessible :field,:old_value,:new_value,:operation,:client_note,:druid,:state_id
 
-    OPERATIONS=%w{create update delete}
+    OPERATIONS=[:create,:update,:delete]
     
     validates :field, presence: true
-    validates :new_value, presence: true
+    validates :new_value, presence: true, :if => "[:update,:create].include? self.operation"
+    validates :old_value, presence: true, :if => "[:update,:delete].include? self.operation"
     validates :project_id, presence: true, numericality: { only_integer: true }
     validates :state_id, presence: true, numericality: { only_integer: true }
     validate :valid_state_id
@@ -18,11 +19,17 @@ module Editstore
     validate :valid_druid
     validate :valid_operation
 
+    before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT)" # this allows the user to set this in their project so it will set automatically for each change
+    
     private
     
+    def set_default_project
+      default_project = Editstore::Project.where(:name=>EDITSTORE_PROJECT).limit(1)
+      self.project_id = default_project.first.id if default_project.size == 1
+    end
+    
     def valid_operation
-      errors.add(:operation, "is not valid") unless OPERATIONS.include? operation.to_s
-      errors.add(:old_value, "must be set for an update operation") if (self.operation.to_s == 'update' && self.old_value.blank?)
+      errors.add(:operation, "is not valid") unless OPERATIONS.include? operation
     end
     
     def valid_druid

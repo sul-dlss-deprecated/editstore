@@ -8,52 +8,119 @@ It provides models that allow your client web application to cache descriptive m
 
 1. Add the following to your application's 'Gemfile':
 
-source 'http://sul-gems.stanford.edu'  # only if you don't already have it
-gem 'editstore'
+	source 'http://sul-gems.stanford.edu'  # only if you don't already have it
+	gem 'editstore'
 
 2. Install the gem
 
-bundle install
+	bundle install
 
 3. Add the migrations to your app
 
-rake editstore:install:migrations
+	rake editstore:install:migrations
 
 4. Add development and test database connection stings to the 'database.yml' file in your app for development/test:
 
-editstore_development:
-  adapter: sqlite3
-  database: db/editstore_development.sqlite3
-  pool: 5
-  timeout: 5000
+	editstore_development:
+	  adapter: sqlite3
+	  database: db/editstore_development.sqlite3
+	  pool: 5
+	  timeout: 5000
     
-editstore_test:
-  adapter: sqlite3
-  database: db/editstore_test.sqlite3
-  pool: 5
-  timeout: 5000
+	editstore_test:
+	  adapter: sqlite3
+	  database: db/editstore_test.sqlite3
+	  pool: 5
+	  timeout: 5000
 
-editstore_production:
-  adapter: mysql2
-  database: # GET IT FROM FRIENDLY SYSADMIN IF YOU NEED IT FOR PRODUCTION
+	editstore_production:
+	  adapter: mysql2
+	  database: # GET IT FROM FRIENDLY SYSADMIN IF YOU NEED IT FOR PRODUCTION
 
 5. Generate a migration to store your project specific name and fields in your own test/dev databases:
 
-rails g migration editstore_myproject
+	rails g migration editstore_myproject
 
 6. Edit your migration to add your project name and fields.  Be sure to have the migration use the correct Editstore database
 connection string as shown below.  For production, these changes will need to be in the correct Editstore database as well.
+An example of this migration you need to add is shown below:
 
-def up
-  @connection=Editstore::Connection.connection
-  project=Editstore::Project.create(:name=>'my_project',:template=>'my_project')
-  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
-  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
-end
+	def up
+	  @connection=Editstore::Connection.connection
+	  project=Editstore::Project.create(:name=>'revs',:template=>'revs')
+	  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
+	  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
+	end
 
 7. Run the migrations
 
-rake db:migrate 
+	rake db:migrate 
 
 == Usage
 
+1. [Optional] If you define the constant "EDITSTORE_PROJECT" in your ruby/rails project as a string that matches a known project in the
+editstore database , the gem will automatically associated all updates with your project.  A good spot to set this
+constant in a Rails app is at the bottom of the 'config/application.rb' file, e.g.
+
+	EDITSTORE_PROJECT='revs'  
+
+2. In the application, to apply an update to DOR, you just need to create a new "Editstore::Change" object and save it.
+If your application needs to update a local SOLR or MySQL, you will need to do this yourself.  This object just saves
+the changes to the editstore database for later propagation to DOR using a project specific template.
+
+The properties you need to set are:
+
+	old_value  : for an update or delete operation, this specifies the current value and is required
+	new_value  : for an update or create operation, this species the new value and is required
+	operation  : set to a symbol with one of three possible values of :update, :delete or :create
+	project_id : set to the project_id of the editstore project, this is set automatically if you followed step 1 above
+	state      : set to Editstore::State.ready OR Editstore::State.wait
+								setting to the 'ready' state means the change can be propagated to DOR immediately
+								setting to the 'wait' state means you do NOT want the change to be propagated to DOR immediately
+								  -- if you set to 'wait', you will need to keep track of the change yourself (probably using the object ID once it is saved)
+								     so you can come and update the state later to 'ready' when you want the change propagated.  This might happen if you
+								     have curated changes
+								
+  field       : a valid field name defined in your project template and listed in the 'fields' table of the editstore database for your project
+	druid       : the druid of the object you want to update (can include or not include the 'druid:' prefix)
+	client_note : an optional note you can set for your application purposes only
+
+Some examples are below:
+
+	a. Add a new value:
+	
+		add=Editstore::Change.new
+		add.new_value='new value'
+		add.operation=:create
+		add.state=Editstore::State.ready 
+		#add.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
+		add.field='title'
+		add.druid='druid:oo000oo0001'
+		add.client_note='some note' 
+		add.save
+		
+	b. Change an existing value:
+
+	  change=Editstore::Change.new
+		change.new_value='new value' 
+		change.old_value='previous value' 
+		change.operation=:update
+		change.state=Editstore::State.ready 
+		#change.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
+		change.field='title' 
+		change.druid='druid:oo000oo0001'
+		change.client_note='some note' 
+		change.save
+		
+	c. Delete an existing value:
+
+	  delete=Editstore::Change.new
+		delete.old_value='value to delete'
+		delete.operation=:delete
+		delete.state=Editstore::State.ready 
+		#delete.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
+		delete.field='title' 
+		delete.druid='druid:oo000oo0001'
+		delete.client_note='some note' 
+		delete.save		
+		
