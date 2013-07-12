@@ -124,3 +124,14 @@ Some examples are below:
 		delete.client_note='some note' 
 		delete.save		
 		
+== Useful Cleanup Tasks
+
+When running in development mode, you will get a lot of unprocessed changes building up in the development
+editstore database (since you won't have the back-end system processing them and cleaning them out).  To clean out
+entries from the editstore database:
+
+	rake editstore:remove_pending
+	
+In production, you can also use this task to clean out any rows that have been marked as completed:
+
+	rake editstore:remove_complete
