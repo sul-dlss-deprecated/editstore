@@ -11,7 +11,7 @@ development:
   
 editstore_development:
   adapter: sqlite3
-  database: db/editstore_development.sqlite3
+  database: db/development.sqlite3
   pool: 5
   timeout: 5000
 
@@ -26,7 +26,7 @@ test:
 
 editstore_test:
   adapter: sqlite3
-  database: db/editstore_test.sqlite3
+  database: db/test.sqlite3
   pool: 5
   timeout: 5000
 
