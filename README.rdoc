@@ -112,7 +112,7 @@ Some examples are below:
 		change.client_note='some note' 
 		change.save
 		
-	c. Delete an existing value:
+	c. Delete an existing value (useful to delete just value in a multivalued field):
 
 	  delete=Editstore::Change.new
 		delete.old_value='value to delete'
@@ -123,7 +123,19 @@ Some examples are below:
 		delete.druid='druid:oo000oo0001'
 		delete.client_note='some note' 
 		delete.save		
-		
+
+	d. Delete all existing values (can be used for either a single valued field or can be used to delete *all* values in a multivalued field):
+	
+		# just leave off the 'old_value' attribute to delete any values associated with this field
+		delete=Editstore::Change.new
+		delete.operation=:delete
+		delete.state=Editstore::State.ready 
+		#delete.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
+		delete.field='title' 
+		delete.druid='druid:oo000oo0001'
+		delete.client_note='some note' 
+		delete.save
+					
 == Useful Cleanup Tasks
 
 When running in development mode, you will get a lot of unprocessed changes building up in the development

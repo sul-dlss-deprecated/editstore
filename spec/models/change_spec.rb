@@ -13,7 +13,7 @@ describe Editstore::Change do
 		@change.new_value='new value'   
   end
   
-  it "require both old and new values when performing a change operation" do
+  it "should require both old and new values when performing a change operation" do
        
     # start by not setting old value
 		@change.operation=:update
@@ -29,7 +29,7 @@ describe Editstore::Change do
   
   end
 
-  it "require a valid field" do
+  it "should require a valid field" do
 
     # start by not setting old value
  		@change.operation=:create
@@ -47,26 +47,7 @@ describe Editstore::Change do
 
   end
 
-  it "require a valid project" do
-
-    # start by not setting old value
- 		@change.operation=:create
-
-		@change.project_id=55
-
- 		@change.valid?.should be_false
- 		@change.save.should be_false
- 		
-    @change.errors.messages[:project_id].should include("is invalid")
-
-    # now set a valid field
-		@change.project=Editstore::Project.where(:name=>'generic').first 
- 		@change.valid?.should be_true  	  
- 		@change.save.should be_true
-
-  end
-
-  it "require a valid project" do
+  it "should require a valid project" do
 
     # start by not setting old value
  		@change.operation=:create
@@ -88,7 +69,7 @@ describe Editstore::Change do
 
   end
 
-  it "automatically set the default project if the constant is set" do
+  it "should automatically set the default project if the constant is set" do
 
     EDITSTORE_PROJECT='revs'  # the name of your project in the editstore database -- this must exist in the edistore database "projects" table in both production and development to work properly
 
@@ -103,19 +84,14 @@ describe Editstore::Change do
     
   end
   
-  it "require both old values when performing a delete operation" do
+  it "should not require an old or new value when performing a delete operation" do
            
     # start by not setting old value
 		@change.operation=:delete
-
-		@change.valid?.should be_false
-		@change.save.should be_false
-    @change.errors.messages[:old_value].should include("can't be blank")
-        
-    # now set old value
-    @change.old_value='old value'
-
-		@change.valid?.should be_true  	  
+    @change.old_value=nil
+    @change.new_value=nil
+    
+		@change.valid?.should be_true
 		@change.save.should be_true
   
   end

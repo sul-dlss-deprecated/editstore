@@ -11,7 +11,7 @@ module Editstore
     validates :field, presence: true
     validates :operation, presence: true
     validates :new_value, presence: true, :if => "%w{update create}.include? self.operation.to_s"
-    validates :old_value, presence: true, :if => "%w{update delete}.include? self.operation.to_s"
+    validates :old_value, presence: true, :if => "%w{update}.include? self.operation.to_s"
     validates :project_id, presence: true, numericality: { only_integer: true }
     validates :state_id, presence: true, numericality: { only_integer: true }
     validate :valid_state_id
