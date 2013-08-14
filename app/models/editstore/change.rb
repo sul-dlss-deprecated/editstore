@@ -4,7 +4,7 @@ module Editstore
   class Change < Connection
     belongs_to :state
     belongs_to :project
-    attr_accessible :field,:old_value,:new_value,:operation,:client_note,:druid,:state_id
+    attr_accessible :field,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error
 
     OPERATIONS=%w{create update delete}
     
