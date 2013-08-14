@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    editstore (0.0.6)
+    editstore (0.0.7)
       druid-tools (>= 0.2.0)
       rails (~> 3.2.13)
 
