@@ -153,7 +153,7 @@ In production, you can also use this task to clean out any rows that have been m
 There is a "dummy" rails app in "spec/dummy" that is used for testing.  To run the tests, run the migrations and then
 run the standard rspec tests:
 
-	cd ./spec/dummy && rake db:migrate RAILS_ENV=test && cd ../..
+	cd ./spec/dummy && rake editstore:install:migrations && rake db:migrate RAILS_ENV=test && cd ../..
 	bundle exec rspec
 	
 	

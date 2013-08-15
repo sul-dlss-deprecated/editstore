@@ -17,7 +17,7 @@ module Editstore
      end
 
      def self.in_process
-       @@in_progress ||= self.find_by_name('in process')
+       @@in_process ||= self.find_by_name('in process')
      end
 
      def self.error
@@ -29,7 +29,7 @@ module Editstore
      end
 
      def self.complete
-       @@in_progress ||= self.find_by_name('complete')
+       @@complete ||= self.find_by_name('complete')
      end
           
   end
