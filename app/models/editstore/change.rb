@@ -22,8 +22,24 @@ module Editstore
     
     before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT)" # this allows the user to set this in their project so it will set automatically for each change
     
-    private
+    def self.by_project_id(project_id)
+      if project_id.to_s.empty?
+        scoped
+      else
+        where(:project_id=>project_id)
+      end
+    end
+
+    def self.by_state_id(state_id)
+      if state_id.to_s.empty?
+        scoped
+      else
+        where(:state_id=>state_id)
+      end
+    end
     
+    
+    private
     def valid_operation
       errors.add(:operation, "is not valid") unless OPERATIONS.include? operation.to_s  
     end
