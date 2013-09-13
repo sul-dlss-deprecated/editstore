@@ -45,7 +45,11 @@ It provides models that allow your client web application to cache descriptive m
 connection string as shown below.  For servers (e.g. staging, production), these changes be done after your creating your template and running the 
 rake editstore:update_editstore_config RAILS_ENV=environment task.
 
-By default, migrations such as this are only run in development and test mode.
+By default, migrations such as this should only run in development and test mode.  By adding the "if Editstore.run_migrations?" qualifier, you will
+ensure you will not get the migrations except in development and test.  The reason is that in staging and production the actual editstore database
+will already be properly configured when you setup the project and do not want these migrations run again on the production servers during
+deployment.  However, since locally you are not running an actual correctly configured instance of the editstore system, these migrations give you
+enough information to make the app work in development.
 
 An example of this migration you need to add is shown below:
 
