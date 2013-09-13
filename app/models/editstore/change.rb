@@ -20,7 +20,7 @@ module Editstore
     validate :valid_druid
     validate :valid_operation
     
-    before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT)" # this allows the user to set this in their project so it will set automatically for each change
+    before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT) && !EDITSTORE_PROJECT.nil?" # this allows the user to set this in their project so it will set automatically for each change
     
     def self.by_project_id(project_id)
       if project_id.to_s.empty?
@@ -44,8 +44,9 @@ module Editstore
       errors.add(:operation, "is not valid") unless OPERATIONS.include? operation.to_s  
     end
     
+    # project name is case insensitive
     def set_default_project
-      default_project = Editstore::Project.where(:name=>EDITSTORE_PROJECT).limit(1)
+      default_project = Editstore::Project.where('lower(name)=?',EDITSTORE_PROJECT.downcase).limit(1)
       self.project_id = default_project.first.id if default_project.size == 1
     end
     
