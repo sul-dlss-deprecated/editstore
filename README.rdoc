@@ -47,7 +47,7 @@ An example of this migration you need to add is shown below:
 
 	def up
 	  @connection=Editstore::Connection.connection
-	  project=Editstore::Project.create(:name=>'revs',:template=>'revs')
+	  project=Editstore::Project.create(:name=>'Revs',:template=>'revs')
 	  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
 	  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
 	end
@@ -62,7 +62,7 @@ An example of this migration you need to add is shown below:
 editstore database , the gem will automatically associated all updates with your project.  A good spot to set this
 constant in a Rails app is at the bottom of the 'config/application.rb' file, e.g.
 
-	EDITSTORE_PROJECT='revs'  
+	EDITSTORE_PROJECT='Revs'  
 
 2. In the application, to apply an update to DOR, you just need to create a new "Editstore::Change" object and save it.
 If your application needs to update a local SOLR or MySQL, you will need to do this yourself.  This object just saves
