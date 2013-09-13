@@ -42,14 +42,20 @@ It provides models that allow your client web application to cache descriptive m
 	rails g migration editstore_myproject
 
 6. Edit your migration to add your project name and fields.  Be sure to have the migration use the correct Editstore database
-connection string as shown below.  For production, these changes will need to be in the correct Editstore database as well.
+connection string as shown below.  For servers (e.g. staging, production), these changes be done after your creating your template and running the 
+rake editstore:update_editstore_config RAILS_ENV=environment task.
+
+By default, migrations such as this are only run in development and test mode.
+
 An example of this migration you need to add is shown below:
 
 	def up
-	  @connection=Editstore::Connection.connection
-	  project=Editstore::Project.create(:name=>'Revs',:template=>'revs')
-	  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
-	  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
+	  if Editstore.run_migrations?
+  	  @connection=Editstore::Connection.connection
+  	  project=Editstore::Project.create(:name=>'Revs',:template=>'revs')
+  	  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
+  	  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
+    end
 	end
 
 7. Run the migrations
