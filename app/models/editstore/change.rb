@@ -47,7 +47,7 @@ module Editstore
     # project name is case insensitive
     def set_default_project
       default_project = Editstore::Project.where('lower(name)=?',EDITSTORE_PROJECT.downcase).limit(1)
-      self.project_id = default_project.first.id if default_project.size == 1
+      self.project_id = default_project.first.id if (default_project.size == 1 && !self.project_id)
     end
     
     def valid_druid

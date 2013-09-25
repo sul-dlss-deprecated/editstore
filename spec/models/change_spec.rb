@@ -3,7 +3,7 @@ require "spec_helper"
 describe Editstore::Change do
   
   before :each do 
-    EDITSTORE_PROJECT=nil if defined?(EDITSTORE_PROJECT)
+    EDITSTORE_PROJECT=nil if defined?(EDITSTORE_PROJECT) # clear the default for each test ; we'll set it when needed for each test
     @change=Editstore::Change.new
     @change.state=Editstore::State.ready 
 		@change.field='title' 
@@ -69,7 +69,7 @@ describe Editstore::Change do
 
   end
 
-  it "should automatically set the default project if the constant is set" do
+  it "should automatically set the default project if the constant is set and the project is not set" do
 
     EDITSTORE_PROJECT='revs'  # the name of your project in the editstore database -- this must exist in the edistore database "projects" table in both production and development to work properly
 
@@ -81,6 +81,22 @@ describe Editstore::Change do
  
  		@change.project_id=Editstore::Project.where(:name=>'revs').first
  		@change.save.should be_true
+    
+  end
+
+  it "should NOT automatically set the default project if the constant is set and the project IS set manually" do
+
+    EDITSTORE_PROJECT='revs'
+
+    # set project_id, and make sure it doesn't get overridden
+ 		@change.operation=:create
+		@change.project_id=Editstore::Project.where(:name=>'generic').first
+  
+ 		@change.valid?.should be_true
+ 		@change.save.should be_true
+ 
+    @change=Editstore::Change.last
+ 		@change.project_id=Editstore::Project.where(:name=>'generic').first
     
   end
   
