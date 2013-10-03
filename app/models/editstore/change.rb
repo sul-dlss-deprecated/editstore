@@ -45,7 +45,7 @@ module Editstore
       limit=params[:limit]
        
       changes = scoped
-      changes = changes.joins(:project)
+      changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id)
       changes = changes.order('created_at,id asc')
       changes = changes.limit(limit) unless limit.blank?
