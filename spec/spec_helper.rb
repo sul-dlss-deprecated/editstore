@@ -15,3 +15,11 @@ RSpec.configure do |config|
   config.global_fixtures = :all
   config.fixture_path = "#{::Rails.root}/../../test/fixtures/editstore"
 end
+
+def generate_changes(num,druid)
+  i=0
+  while i < num do 
+    Editstore::Change.create(:field=>'title',:project_id=>1,:druid=>druid,:new_value=>"blated #{i}",:operation=>'update',:old_value=>"boop #{i}",:state_id=>2)
+    i +=1
+  end
+end

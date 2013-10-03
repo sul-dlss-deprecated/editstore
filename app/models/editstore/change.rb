@@ -4,7 +4,7 @@ module Editstore
   class Change < Connection
     belongs_to :state
     belongs_to :project
-    attr_accessible :field,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error
+    attr_accessible :field,:project_id,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error
 
     OPERATIONS=%w{create update delete}
     
@@ -37,7 +37,21 @@ module Editstore
         where(:state_id=>state_id)
       end
     end
-    
+
+    # get the latest changes to process for a specific state (defaults to ready) and an optional limit
+    def self.latest(params={})
+
+      state_id=params[:state_id] || Editstore::State.ready.id
+      limit=params[:limit]
+       
+      changes = scoped
+      changes = changes.joins(:project)
+      changes = changes.where(:state_id=>state_id)
+      changes = changes.order('created_at,id asc')
+      changes = changes.limit(limit) unless limit.blank?
+      changes.group_by {|c| c.druid}
+     
+    end
     
     private
     def valid_operation
