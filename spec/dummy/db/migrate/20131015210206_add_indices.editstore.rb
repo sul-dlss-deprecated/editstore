@@ -7,6 +7,7 @@ class AddIndices < ActiveRecord::Migration
       add_index(:editstore_changes, :state_id)
       add_index(:editstore_fields, :project_id)
       add_index(:editstore_object_updates, :druid)
+      add_index(:editstore_object_updates, :locked)
     end
   end
 

@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20131015210206) do
   end
 
   add_index "editstore_object_updates", ["druid"], :name => "index_editstore_object_updates_on_druid"
+  add_index "editstore_object_updates", ["locked"], :name => "index_editstore_object_updates_on_locked"
 
   create_table "editstore_projects", :force => true do |t|
     t.string   "name",       :null => false
