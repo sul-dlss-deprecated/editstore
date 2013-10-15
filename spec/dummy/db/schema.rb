@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131004224448) do
+ActiveRecord::Schema.define(:version => 20131015204309) do
 
   create_table "editstore_changes", :force => true do |t|
     t.integer  "project_id",  :null => false
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(:version => 20131004224448) do
   create_table "editstore_fields", :force => true do |t|
     t.integer  "project_id", :null => false
     t.string   "name",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "editstore_object_updates", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "editstore_objects", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
