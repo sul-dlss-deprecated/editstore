@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131015204309) do
+ActiveRecord::Schema.define(:version => 20131015210206) do
 
   create_table "editstore_changes", :force => true do |t|
     t.integer  "project_id",  :null => false
@@ -28,6 +28,10 @@ ActiveRecord::Schema.define(:version => 20131015204309) do
     t.boolean  "pending"
   end
 
+  add_index "editstore_changes", ["druid"], :name => "index_editstore_changes_on_druid"
+  add_index "editstore_changes", ["project_id"], :name => "index_editstore_changes_on_project_id"
+  add_index "editstore_changes", ["state_id"], :name => "index_editstore_changes_on_state_id"
+
   create_table "editstore_fields", :force => true do |t|
     t.integer  "project_id", :null => false
     t.string   "name",       :null => false
@@ -35,15 +39,15 @@ ActiveRecord::Schema.define(:version => 20131015204309) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "editstore_fields", ["project_id"], :name => "index_editstore_fields_on_project_id"
+
   create_table "editstore_object_updates", :force => true do |t|
+    t.string   "druid",      :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "editstore_objects", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
+  add_index "editstore_object_updates", ["druid"], :name => "index_editstore_object_updates_on_druid"
 
   create_table "editstore_projects", :force => true do |t|
     t.string   "name",       :null => false
