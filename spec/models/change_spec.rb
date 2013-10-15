@@ -129,6 +129,21 @@ describe Editstore::Change do
 
   end
 
+  it "should get the latest druids to apply" do
+    
+    druids=%w{druid:oo000oo0001 druid:oo000oo0002 druid:oo000oo0003}  
+    druids.each {|druid| generate_changes(5,druid)}
+
+    changes=Editstore::Change.latest_druids
+    changes.class.should == Array
+    changes.size.should == 3
+    
+    changes[0].should == druids[0]
+    changes[1].should == druids[1]
+    changes[2].should == druids[2]
+    
+  end
+
   it "should get the latest updates to apply with a limit" do
     
     druids=%w{druid:oo000oo0001 druid:oo000oo0002}  
@@ -141,6 +156,20 @@ describe Editstore::Change do
     changes[druids[0]].class.should == Array
     changes[druids[0]].size.should == 2
 
+  end
+
+  it "should get the latest druids to apply with a limit" do
+    
+    druids=%w{druid:oo000oo0001 druid:oo000oo0002 druid:oo000oo0003}  
+    druids.each {|druid| generate_changes(5,druid)}
+
+    changes=Editstore::Change.latest_druids(:limit=>2)
+    changes.class.should == Array
+    changes.size.should == 2
+    
+    changes[0].should == druids[0]
+    changes[1].should == druids[1]
+    
   end
 
   it "should get the latest updates to apply with a different state_id" do

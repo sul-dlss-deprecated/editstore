@@ -43,14 +43,33 @@ module Editstore
 
       state_id=params[:state_id] || Editstore::State.ready.id
       limit=params[:limit]
+      project_id=params[:project_id]
        
       changes = scoped
       changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id)
+      changes = changes.where(:project_id=>project_id) if project_id
       changes = changes.order('created_at,id asc')
       changes = changes.limit(limit) unless limit.blank?
       changes.group_by {|c| c.druid}
      
+    end
+    
+    # get the latest list of unique druids to process for a specific state (defaults to ready) and an optional limit
+    def self.latest_druids(params={})
+
+      state_id=params[:state_id] || Editstore::State.ready.id
+      limit=params[:limit]
+      project_id=params[:project_id]
+      
+      changes = scoped
+      changes = changes.includes(:project)
+      changes = changes.where(:state_id=>state_id)
+      changes = changes.where(:project_id=>project_id) if project_id
+      changes = changes.order('created_at,id asc')
+      changes = changes.limit(limit) unless limit.blank?
+      changes.uniq.pluck(:druid)
+
     end
     
     private
