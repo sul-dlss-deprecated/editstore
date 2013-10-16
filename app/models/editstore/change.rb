@@ -4,6 +4,7 @@ module Editstore
   class Change < Connection
     belongs_to :state
     belongs_to :project
+    belongs_to :object_lock, :primary_key=>:druid, :foreign_key=>:druid
     attr_accessible :field,:project_id,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error,:pending
 
     OPERATIONS=%w{create update delete}
@@ -69,7 +70,7 @@ module Editstore
       changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id)
       changes = changes.where(:project_id=>project_id) if project_id
-      changes = changes.order('created_at,id asc')
+      changes = changes.order('editstore_changes.created_at,editstore_changes.id asc')
       changes = changes.limit(limit) unless limit.blank?
       changes.uniq.pluck(:druid)
 
