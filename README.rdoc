@@ -158,6 +158,10 @@ In production, you can also use this task to clean out any rows that have been m
 
 	rake editstore:remove_complete
 	
+Use this task to clear out the unlocked druids from the object lock table
+
+  rake editstore:prune_locks
+	
 == Running Tests
 
 There is a "dummy" rails app in "spec/dummy" that is used for testing.  To run the tests, run the migrations and then

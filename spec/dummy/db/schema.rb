@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(:version => 20131015210206) do
 
   create_table "editstore_object_updates", :force => true do |t|
     t.string   "druid",      :null => false
-    t.boolean  "locked"
+    t.datetime "locked"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

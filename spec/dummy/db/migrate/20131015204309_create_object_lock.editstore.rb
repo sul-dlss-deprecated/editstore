@@ -5,7 +5,7 @@ class CreateObjectLock < ActiveRecord::Migration
       @connection=Editstore::Connection.connection
       create_table :editstore_object_updates do |t|
         t.string :druid, :null=>false
-        t.boolean :locked
+        t.datetime :locked
         t.timestamps
       end
     end
