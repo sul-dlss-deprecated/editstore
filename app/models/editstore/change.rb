@@ -39,19 +39,22 @@ module Editstore
     end
 
     # get the latest changes to process for a specific state (defaults to ready) and an optional limit
+    # if not restricted by druid, will group by druid
     def self.latest(params={})
 
       state_id=params[:state_id] || Editstore::State.ready.id
       limit=params[:limit]
       project_id=params[:project_id]
+      druid=params[:druid]
        
       changes = scoped
       changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id)
       changes = changes.where(:project_id=>project_id) if project_id
+      changes = changes.where(:druid=>druid) if druid
       changes = changes.order('created_at,id asc')
       changes = changes.limit(limit) unless limit.blank?
-      changes.group_by {|c| c.druid}
+      druid ? changes : changes.group_by {|c| c.druid}
      
     end
     

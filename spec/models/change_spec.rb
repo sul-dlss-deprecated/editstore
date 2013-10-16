@@ -129,6 +129,24 @@ describe Editstore::Change do
 
   end
 
+  it "should get the latest updates to apply for a single druid" do
+    
+    druids=%w{druid:oo000oo0001 druid:oo000oo0002}  
+    generate_changes(5,druids[0])
+    generate_changes(3,druids[1])
+
+    changes=Editstore::Change.latest(:druid=>druids[0])
+    changes.class.should == ActiveRecord::Relation
+    changes.size.should == 5
+    changes.each {|change| change.class.should == Editstore::Change}
+
+    changes=Editstore::Change.latest(:druid=>druids[1])
+    changes.class.should == ActiveRecord::Relation
+    changes.size.should == 3
+    changes.each {|change| change.class.should == Editstore::Change}
+    
+  end
+  
   it "should get the latest druids to apply" do
     
     druids=%w{druid:oo000oo0001 druid:oo000oo0002 druid:oo000oo0003}  
@@ -144,6 +162,21 @@ describe Editstore::Change do
     
   end
 
+  it "should get the latest druids to apply" do
+    
+    druids=%w{druid:oo000oo0001 druid:oo000oo0002 druid:oo000oo0003}  
+    druids.each {|druid| generate_changes(5,druid)}
+
+    changes=Editstore::Change.latest_druids
+    changes.class.should == Array
+    changes.size.should == 3
+    
+    changes[0].should == druids[0]
+    changes[1].should == druids[1]
+    changes[2].should == druids[2]
+    
+  end
+  
   it "should get the latest updates to apply with a limit" do
     
     druids=%w{druid:oo000oo0001 druid:oo000oo0002}  
