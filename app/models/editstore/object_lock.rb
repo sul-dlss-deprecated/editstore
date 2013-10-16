@@ -1,13 +1,13 @@
 module Editstore
-  class ObjectUpdate < Connection
+  class ObjectLock < Connection
     attr_accessible :locked, :druid
   
   def self.all_locked
-    Editstore::ObjectUpdate.where('locked IS NOT NULL')
+    self.where('locked IS NOT NULL')
   end
 
   def self.all_unlocked
-    Editstore::ObjectUpdate.where(:locked=>nil)
+    self.where(:locked=>nil)
   end
   
   # some convenience class level methods for operating on a specific druid

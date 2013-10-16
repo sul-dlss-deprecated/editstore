@@ -9,6 +9,8 @@ class CreateRunLog < ActiveRecord::Migration
         t.integer :num_errors
         t.integer :num_pending
         t.string :note
+        t.datetime :started
+        t.datetime :ended
         t.timestamps
       end
     end

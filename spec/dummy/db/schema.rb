@@ -41,15 +41,15 @@ ActiveRecord::Schema.define(:version => 20131016183325) do
 
   add_index "editstore_fields", ["project_id"], :name => "index_editstore_fields_on_project_id"
 
-  create_table "editstore_object_updates", :force => true do |t|
+  create_table "editstore_object_locks", :force => true do |t|
     t.string   "druid",      :null => false
     t.datetime "locked"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  add_index "editstore_object_updates", ["druid"], :name => "index_editstore_object_updates_on_druid"
-  add_index "editstore_object_updates", ["locked"], :name => "index_editstore_object_updates_on_locked"
+  add_index "editstore_object_locks", ["druid"], :name => "index_editstore_object_locks_on_druid"
+  add_index "editstore_object_locks", ["locked"], :name => "index_editstore_object_locks_on_locked"
 
   create_table "editstore_projects", :force => true do |t|
     t.string   "name",       :null => false
@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(:version => 20131016183325) do
     t.integer  "num_errors"
     t.integer  "num_pending"
     t.string   "note"
+    t.datetime "started"
+    t.datetime "ended"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

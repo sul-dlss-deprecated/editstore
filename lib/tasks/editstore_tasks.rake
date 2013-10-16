@@ -12,12 +12,12 @@ namespace :editstore do
   
   desc "Prune locked object tables to remove any unlocked druids"
   task :prune_locks => :environment do
-    Editstore::ObjectUpdate.destroy_all(:locked=>nil)
+    Editstore::ObjectLock.destroy_all(:locked=>nil)
   end
 
   desc "Remove all object locks for any druids"
   task :clear_locks => :environment do
-    Editstore::ObjectUpdate.all_locked.each {|obj| obj.unlock}
+    Editstore::ObjectLock.all_locked.each {|obj| obj.unlock}
   end
     
   desc "Remove unprocessed updates"
