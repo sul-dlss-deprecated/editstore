@@ -2,6 +2,7 @@
 class AddIndices < ActiveRecord::Migration
   def up
     if Editstore.run_migrations?
+      @connection=Editstore::Connection.connection
       add_index(:editstore_changes, :project_id)
       add_index(:editstore_changes, :druid)
       add_index(:editstore_changes, :state_id)
