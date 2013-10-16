@@ -2,31 +2,43 @@ require 'spec_helper'
 
 describe Editstore::ObjectLock do
   
-  it "should lock an object" do
+  it "should add the druid: prefix if missing" do
+    
+    pids=['druid:oo000oo0001','oo000oo0002']
+    
+    Editstore::ObjectLock.get_pid(pids[0]).should == 'druid:oo000oo0001'
+    Editstore::ObjectLock.get_pid(pids[1]).should == 'druid:oo000oo0002'
+
+  end
+  
+  it "should lock an object, with or without druid: prefix" do
        
-    pid='druid:oo000oo0001'
+    pids=['druid:oo000oo0001','oo000oo0002']
     
-    obj=Editstore::ObjectLock.find_by_druid(pid) 
-    obj.should be_nil
+    pids.each do |pid|
+      puts pid
+      obj=Editstore::ObjectLock.find_by_druid(Editstore::ObjectLock.get_pid(pid)) 
+      obj.should be_nil
     
-    Editstore::ObjectLock.locked?(pid).should be_false
+      Editstore::ObjectLock.locked?(pid).should be_false
 
-    Editstore::ObjectLock.lock(pid).should be_true
+      Editstore::ObjectLock.lock(pid).should be_true
 
-    Editstore::ObjectLock.locked?(pid).should be_true
+      Editstore::ObjectLock.locked?(pid).should be_true
     
-    obj=Editstore::ObjectLock.find_by_druid(pid) 
-    obj.locked.should_not be_nil
+      obj=Editstore::ObjectLock.find_by_druid(Editstore::ObjectLock.get_pid(pid)) 
+      obj.locked.should_not be_nil
 
-    Editstore::ObjectLock.lock(pid).should be_false #can't lock again
-    Editstore::ObjectLock.unlock(pid).should be_true
+      Editstore::ObjectLock.lock(pid).should be_false #can't lock again
+      Editstore::ObjectLock.unlock(pid).should be_true
     
-    obj.unlock.should be_true
+      obj.unlock.should be_true
     
-    Editstore::ObjectLock.locked?(pid).should be_false
-    obj.reload
-    obj.locked.should be_nil
-      
+      Editstore::ObjectLock.locked?(pid).should be_false
+      obj.reload
+      obj.locked.should be_nil
+    end
+    
   end
 
   it "should unlock an object" do
