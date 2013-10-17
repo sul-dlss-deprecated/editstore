@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131016183325) do
+ActiveRecord::Schema.define(:version => 20131017165248) do
 
   create_table "editstore_changes", :force => true do |t|
     t.integer  "project_id",  :null => false
@@ -42,10 +42,11 @@ ActiveRecord::Schema.define(:version => 20131016183325) do
   add_index "editstore_fields", ["project_id"], :name => "index_editstore_fields_on_project_id"
 
   create_table "editstore_object_locks", :force => true do |t|
-    t.string   "druid",      :null => false
+    t.string   "druid",        :null => false
     t.datetime "locked"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "lock_version"
   end
 
   add_index "editstore_object_locks", ["druid"], :name => "index_editstore_object_locks_on_druid"

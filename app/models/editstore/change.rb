@@ -59,7 +59,7 @@ module Editstore
      
     end
     
-    # get the latest list of unique druids to process for a specific state (defaults to ready) and an optional limit
+    # get the latest list of unique druids to process for a specific state (defaults to ready) and an optional limit, return an array
     def self.latest_druids(params={})
 
       state_id=params[:state_id] || Editstore::State.ready.id
