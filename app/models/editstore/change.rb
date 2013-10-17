@@ -23,6 +23,10 @@ module Editstore
     
     before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT) && !EDITSTORE_PROJECT.nil?" # this allows the user to set this in their project so it will set automatically for each change
     
+    def self.prune
+      self.destroy_all(:state_id=>Editstore::State.complete)  
+    end
+    
     def self.by_project_id(project_id)
       if project_id.to_s.empty?
         scoped

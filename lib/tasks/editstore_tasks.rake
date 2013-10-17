@@ -2,22 +2,22 @@ namespace :editstore do
 
   desc "Remove completed updates"
   task :remove_complete => :environment do
-    Editstore::Change.destroy_all(:state_id=>Editstore::State.complete)
+    Editstore::Change.prune
   end
 
   desc "Prune run log to remove entries over 1 month old"
   task :prune_run_log => :environment do
-    Editstore::RunLog.where('updated_at < ?',1.month.ago).each {|obj| obj.destroy}
+    Editstore::RunLog.prune
   end
   
   desc "Prune locked object tables to remove any unlocked druids"
   task :prune_locks => :environment do
-    Editstore::ObjectLock.destroy_all(:locked=>nil)
+    Editstore::ObjectLock.prune
   end
 
   desc "Remove all object locks for any druids"
   task :clear_locks => :environment do
-    Editstore::ObjectLock.all_locked.each {|obj| obj.unlock}
+    Editstore::ObjectLock.unlock_all
   end
     
   desc "Remove unprocessed updates"

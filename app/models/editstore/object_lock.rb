@@ -2,6 +2,14 @@ module Editstore
   class ObjectLock < Connection
     attr_accessible :locked, :druid
   
+    def self.prune
+      self.destroy_all(:locked=>nil)
+    end  
+    
+    def self.unlock_all
+      self.all_locked.each {|obj| obj.unlock}
+    end
+    
     def self.get_pid(pid)
       pid.start_with?('druid:') ? pid : "druid:#{pid}"
     end
