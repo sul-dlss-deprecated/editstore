@@ -50,7 +50,7 @@ module Editstore
        
       changes = scoped
       changes = changes.includes(:project)
-      changes = changes.where(:state_id=>state_id)
+      changes = changes.where(:state_id=>state_id) if state_id != '*'
       changes = changes.where(:project_id=>project_id) if project_id
       changes = changes.where(:druid=>druid) if druid
       changes = changes.order('created_at,id asc')
@@ -68,7 +68,7 @@ module Editstore
       
       changes = scoped
       changes = changes.includes(:project)
-      changes = changes.where(:state_id=>state_id)
+      changes = changes.where(:state_id=>state_id) if state_id != '*'
       changes = changes.where(:project_id=>project_id) if project_id
       changes = changes.order('editstore_changes.created_at,editstore_changes.id asc')
       changes = changes.limit(limit) unless limit.blank?
