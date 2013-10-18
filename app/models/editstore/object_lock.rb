@@ -2,12 +2,16 @@ module Editstore
   class ObjectLock < Connection
     attr_accessible :locked, :druid
   
-    def self.prune
-      self.destroy_all(:locked=>nil)
+    def self.prune_all
+      self.destroy_all(:locked=>nil) # anything that is not locked
     end  
     
+    def self.prune
+      self.where(:locked=>nil).where('updated_at < ?',1.month.ago).each {|obj| obj.destroy}  # anything that is not locked older than 1 month
+    end
+    
     def self.unlock_all
-      self.all_locked.each {|obj| obj.unlock}
+      self.all_locked.each {|obj| obj.unlock} # unlock anything that is locked
     end
     
     def self.get_pid(pid)

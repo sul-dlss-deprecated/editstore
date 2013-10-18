@@ -11,6 +11,73 @@ describe Editstore::ObjectLock do
 
   end
   
+  it "should prune all unlocked druids" do
+    
+    unlocked_pids=['druid:oo000oo0001','druid:oo000oo0002']
+    locked_pids=['druid:oo000oo003']
+    unlocked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+      Editstore::ObjectLock.unlock(pid).should be_true
+    end
+    locked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+    end
+
+    Editstore::ObjectLock.all_unlocked.size.should == unlocked_pids.size    
+    Editstore::ObjectLock.all_locked.size.should == locked_pids.size
+    
+    Editstore::ObjectLock.prune_all
+
+    Editstore::ObjectLock.all_unlocked.size.should == 0
+    Editstore::ObjectLock.all_locked.size.should == locked_pids.size    
+
+  end
+
+  it "should prune all unlocked druids older than 1 month" do
+    
+    unlocked_pids=['druid:oo000oo0001','druid:oo000oo0002']
+    older_unlocked_pids=['druid:oo000oo0003','druid:oo000oo0004']
+    locked_pids=['druid:oo000oo005']
+    older_unlocked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+      Editstore::ObjectLock.unlock(pid).should be_true
+      obj=Editstore::ObjectLock.find_by_druid(Editstore::ObjectLock.get_pid(pid)) 
+      obj.updated_at=Time.now - 2.months # make it older manually
+      obj.save
+    end
+    unlocked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+      Editstore::ObjectLock.unlock(pid).should be_true
+    end
+    locked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+    end
+
+    Editstore::ObjectLock.all_unlocked.size.should == unlocked_pids.size + older_unlocked_pids.size  
+    Editstore::ObjectLock.all_locked.size.should == locked_pids.size
+    
+    Editstore::ObjectLock.prune
+
+    Editstore::ObjectLock.all_unlocked.size.should == unlocked_pids.size
+    Editstore::ObjectLock.all_locked.size.should == locked_pids.size    
+
+  end  
+
+  it "should unlock all locked druids" do
+    
+    locked_pids=['druid:oo000oo0001','druid:oo000oo0002']
+    locked_pids.each do |pid|
+      Editstore::ObjectLock.lock(pid).should be_true
+    end
+    Editstore::ObjectLock.all_locked.size.should == locked_pids.size
+    
+    Editstore::ObjectLock.unlock_all
+
+    Editstore::ObjectLock.all_unlocked.size.should == locked_pids.size
+    Editstore::ObjectLock.all_locked.size.should == 0 
+
+  end
+  
   it "should lock an object, with or without druid: prefix" do
        
     pids=['druid:oo000oo0001','oo000oo0002']

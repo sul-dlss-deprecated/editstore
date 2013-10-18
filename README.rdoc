@@ -160,7 +160,8 @@ In production, you can also use this task to clean out any rows that have been m
 	
 Use this task to clear out the unlocked druids from the object lock table.  Should be safe to run at any time.
 
-  rake editstore:prune_locks
+  rake editstore:prune_locks # prune any unlocked druids older than 1 month
+  rake editstore:prune_locks_all   # prune all unlocked druids
   
 Use this task to clear out the locked druids from the object lock table.  Should only be run if you are sure locks have hung and 
 there are no other processes running.
@@ -169,7 +170,9 @@ there are no other processes running.
 
 Use this task to clear out the any log run entries older than one month. Should be safe to run at any time if you don't need more than 1 month of run log history
 
-  rake editstore:prune_run_log
+  rake editstore:prune_run_log # prune any run logs older than 1 month and any run logs older than 24 hours with no activity
+  rake editstore:prune_run_log_all # prune any run logs that are not in process
+  
     	
 == Running Tests
 
