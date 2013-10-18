@@ -30,8 +30,11 @@ module Editstore
       run1.updated_at=Time.now - 2.months
       run1.save
       run2=Editstore::RunLog.create(:started=>Time.now - 1.day,:ended=>Time.now - 1.day + 1.hour,:total_druids=>2)
+      run3=Editstore::RunLog.create(:started=>Time.now - 2.days,:ended=>Time.now - 1.day + 2.hours,:total_druids=>0)
+      run3.updated_at=Time.now - 2.days
+      run3.save
       current_run1=Editstore::RunLog.create(:started=>Time.now - 1.day,:total_druids=>2)
-      Editstore::RunLog.count.should == 3
+      Editstore::RunLog.count.should == 4
       Editstore::RunLog.prune
       Editstore::RunLog.count.should == 2     
     end
