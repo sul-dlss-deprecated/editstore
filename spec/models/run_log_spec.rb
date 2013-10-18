@@ -36,7 +36,8 @@ module Editstore
       current_run1=Editstore::RunLog.create(:started=>Time.now - 1.day,:total_druids=>2)
       Editstore::RunLog.count.should == 4
       Editstore::RunLog.prune
-      Editstore::RunLog.count.should == 2     
+      Editstore::RunLog.count.should == 2   
+      Editstore::RunLog.all.should == [run2,current_run1]  
     end
     
     it "should prune all completed run logs" do
@@ -48,6 +49,7 @@ module Editstore
       Editstore::RunLog.count.should == 3
       Editstore::RunLog.prune_all
       Editstore::RunLog.count.should == 1
+      Editstore::RunLog.all.should == [current_run1]
     end
 
   end
