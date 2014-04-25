@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "The editstore gem is used by client web applications (like Revs Digital Library) to stage changes to descriptive metadata in DOR"
   s.description = "The editstore gem is a Rails engine, including all models and migrations needed to connect to the editstore database for caching descriptive metadata edits."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 3.2.13"
