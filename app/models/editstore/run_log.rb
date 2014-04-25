@@ -11,6 +11,7 @@ module Editstore
       self.where('updated_at < ?',1.day.ago).where('ended IS NULL').each {|obj| obj.destroy} # anything older than 1 day that is not marked as finished running (but must be crashed and not actually running)
       self.where('updated_at < ?',1.month.ago).each {|obj| obj.destroy} # anything older than 1 month
       self.where(:total_druids=>0).where('updated_at < ?',1.day.ago).each {|obj| obj.destroy} # anything older than 1 day with no activity
+      self.where('total_changes = num_pending').where('updated_at < ?',1.day.ago).each {|obj| obj.destroy} # anything older than 1 day where all the changes are pending
     end
     def self.prune_all
       self.where('ended IS NOT NULL').each {|obj| obj.destroy} # anything that is done
