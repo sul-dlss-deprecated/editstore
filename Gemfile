@@ -1,5 +1,4 @@
-source "http://rubygems.org"
-source "http://sul-gems.stanford.edu"
+source "https://rubygems.org"
 
 # Declare your gem's dependencies in editstore.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
