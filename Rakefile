@@ -4,6 +4,7 @@ begin
 rescue LoadError
   puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
 end
+
 begin
   require 'rdoc/task'
 rescue LoadError
@@ -38,7 +39,3 @@ end
 
 
 task :default => :test
-
-# DLSS specific stuff
-require 'dlss/rake/dlss_release'
-Dlss::Release.new

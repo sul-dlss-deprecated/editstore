@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Editstore::Change do
+describe Editstore::Change, :type => :model do
   
   before :each do 
     EDITSTORE_PROJECT=nil if defined?(EDITSTORE_PROJECT) # clear the default for each test ; we'll set it when needed for each test
@@ -18,14 +18,14 @@ describe Editstore::Change do
     # start by not setting old value
 		@change.operation=:update
 
-		@change.valid?.should be_false
-		@change.save.should be_false
-    @change.errors.messages[:old_value].should include("can't be blank")
+		expect(@change.valid?).to be_falsey
+		expect(@change.save).to be_falsey
+    expect(@change.errors.messages[:old_value]).to include("can't be blank")
     
     # now set old value
     @change.old_value='old value'
-		@change.valid?.should be_true  	  
-		@change.save.should be_true
+		expect(@change.valid?).to be_truthy  	  
+		expect(@change.save).to be_truthy
   
   end
 
@@ -36,14 +36,14 @@ describe Editstore::Change do
 
 		@change.field='bogus' 
 
- 		@change.valid?.should be_false
- 		@change.save.should be_false
-    @change.errors.messages[:field].should include("is invalid")
+ 		expect(@change.valid?).to be_falsey
+ 		expect(@change.save).to be_falsey
+    expect(@change.errors.messages[:field]).to include("is invalid")
 
     # now set a valid field
 		@change.field='title' 
- 		@change.valid?.should be_true  	  
- 		@change.save.should be_true
+ 		expect(@change.valid?).to be_truthy  	  
+ 		expect(@change.save).to be_truthy
 
   end
 
@@ -53,19 +53,19 @@ describe Editstore::Change do
  		@change.operation=:create
 
 		@change.project_id=nil
- 		@change.valid?.should be_false
- 		@change.save.should be_false
-    @change.errors.messages[:project_id].should include("is invalid")
+ 		expect(@change.valid?).to be_falsey
+ 		expect(@change.save).to be_falsey
+    expect(@change.errors.messages[:project_id]).to include("is invalid")
 
 		@change.project_id=55 # bogus
- 		@change.valid?.should be_false
- 		@change.save.should be_false
-    @change.errors.messages[:project_id].should include("is invalid")
+ 		expect(@change.valid?).to be_falsey
+ 		expect(@change.save).to be_falsey
+    expect(@change.errors.messages[:project_id]).to include("is invalid")
 
     # now set a valid field
 		@change.project=Editstore::Project.where(:name=>'generic').first 
- 		@change.valid?.should be_true  	  
- 		@change.save.should be_true
+ 		expect(@change.valid?).to be_truthy  	  
+ 		expect(@change.save).to be_truthy
 
   end
 
@@ -77,10 +77,10 @@ describe Editstore::Change do
  		@change.operation=:create
 		@change.project_id=nil
   
- 		@change.valid?.should be_true
+ 		expect(@change.valid?).to be_truthy
  
  		@change.project_id=Editstore::Project.where(:name=>'revs').first
- 		@change.save.should be_true
+ 		expect(@change.save).to be_truthy
     
   end
 
@@ -92,8 +92,8 @@ describe Editstore::Change do
  		@change.operation=:create
 		@change.project_id=Editstore::Project.where(:name=>'generic').first
   
- 		@change.valid?.should be_true
- 		@change.save.should be_true
+ 		expect(@change.valid?).to be_truthy
+ 		expect(@change.save).to be_truthy
  
     @change=Editstore::Change.last
  		@change.project_id=Editstore::Project.where(:name=>'generic').first
@@ -107,8 +107,8 @@ describe Editstore::Change do
     @change.old_value=nil
     @change.new_value=nil
     
-		@change.valid?.should be_true
-		@change.save.should be_true
+		expect(@change.valid?).to be_truthy
+		expect(@change.save).to be_truthy
   
   end
 
@@ -119,13 +119,13 @@ describe Editstore::Change do
     generate_changes(3,druids[1])
 
     changes=Editstore::Change.latest
-    changes.class.should == Hash
-    changes.size.should == 2
+    expect(changes.class).to eq(Hash)
+    expect(changes.size).to eq(2)
     
-    changes[druids[0]].class.should == Array
-    changes[druids[0]].size.should == 5
-    changes[druids[1]].class.should == Array
-    changes[druids[1]].size.should == 3
+    expect(changes[druids[0]].class).to eq(Array)
+    expect(changes[druids[0]].size).to eq(5)
+    expect(changes[druids[1]].class).to eq(Array)
+    expect(changes[druids[1]].size).to eq(3)
 
   end
 
@@ -136,14 +136,14 @@ describe Editstore::Change do
     generate_changes(3,druids[1])
 
     changes=Editstore::Change.latest(:druid=>druids[0])
-    changes.class.should == ActiveRecord::Relation
-    changes.size.should == 5
-    changes.each {|change| change.class.should == Editstore::Change}
+    expect(changes.class).to eq(ActiveRecord::Relation)
+    expect(changes.size).to eq(5)
+    changes.each {|change| expect(change.class).to eq(Editstore::Change)}
 
     changes=Editstore::Change.latest(:druid=>druids[1])
-    changes.class.should == ActiveRecord::Relation
-    changes.size.should == 3
-    changes.each {|change| change.class.should == Editstore::Change}
+    expect(changes.class).to eq(ActiveRecord::Relation)
+    expect(changes.size).to eq(3)
+    changes.each {|change| expect(change.class).to eq(Editstore::Change)}
     
   end
   
@@ -153,12 +153,12 @@ describe Editstore::Change do
     druids.each {|druid| generate_changes(5,druid)}
 
     changes=Editstore::Change.latest_druids
-    changes.class.should == Array
-    changes.size.should == 3
+    expect(changes.class).to eq(Array)
+    expect(changes.size).to eq(3)
     
-    changes[0].should == druids[0]
-    changes[1].should == druids[1]
-    changes[2].should == druids[2]
+    expect(changes[0]).to eq(druids[0])
+    expect(changes[1]).to eq(druids[1])
+    expect(changes[2]).to eq(druids[2])
     
   end
 
@@ -168,12 +168,12 @@ describe Editstore::Change do
     druids.each {|druid| generate_changes(5,druid)}
 
     changes=Editstore::Change.latest_druids
-    changes.class.should == Array
-    changes.size.should == 3
+    expect(changes.class).to eq(Array)
+    expect(changes.size).to eq(3)
     
-    changes[0].should == druids[0]
-    changes[1].should == druids[1]
-    changes[2].should == druids[2]
+    expect(changes[0]).to eq(druids[0])
+    expect(changes[1]).to eq(druids[1])
+    expect(changes[2]).to eq(druids[2])
     
   end
   
@@ -183,11 +183,11 @@ describe Editstore::Change do
     druids.each {|druid| generate_changes(5,druid)}
 
     changes=Editstore::Change.latest(:limit=>2)
-    changes.class.should == Hash
-    changes.size.should == 1
+    expect(changes.class).to eq(Hash)
+    expect(changes.size).to eq(1)
     
-    changes[druids[0]].class.should == Array
-    changes[druids[0]].size.should == 2
+    expect(changes[druids[0]].class).to eq(Array)
+    expect(changes[druids[0]].size).to eq(2)
 
   end
 
@@ -197,11 +197,11 @@ describe Editstore::Change do
     druids.each {|druid| generate_changes(5,druid)}
 
     changes=Editstore::Change.latest_druids(:limit=>2)
-    changes.class.should == Array
-    changes.size.should == 2
+    expect(changes.class).to eq(Array)
+    expect(changes.size).to eq(2)
     
-    changes[0].should == druids[0]
-    changes[1].should == druids[1]
+    expect(changes[0]).to eq(druids[0])
+    expect(changes[1]).to eq(druids[1])
     
   end
 
@@ -211,8 +211,8 @@ describe Editstore::Change do
     druids.each {|druid| generate_changes(5,druid)}
 
     changes=Editstore::Change.latest(:state_id=>3)
-    changes.class.should == Hash
-    changes.size.should == 0
+    expect(changes.class).to eq(Hash)
+    expect(changes.size).to eq(0)
     
   end
   
