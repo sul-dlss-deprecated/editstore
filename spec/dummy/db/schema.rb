@@ -11,26 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131028221958) do
+ActiveRecord::Schema.define(:version => 20131017165120) do
 
   create_table "editstore_changes", :force => true do |t|
-    t.integer  "project_id",  :null => false
-    t.string   "field",       :null => false
-    t.string   "druid"
+    t.integer  "project_id",                     :null => false
+    t.string   "field",                          :null => false
+    t.string   "druid",                          :null => false
     t.text     "old_value"
     t.text     "new_value"
-    t.text     "operation",   :null => false
-    t.integer  "state_id",    :null => false
+    t.string   "operation",                      :null => false
+    t.integer  "state_id",                       :null => false
     t.text     "client_note"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.string   "error"
-    t.boolean  "pending"
-    t.integer  "item_id"
+    t.boolean  "pending",     :default => false
   end
 
   add_index "editstore_changes", ["druid"], :name => "index_editstore_changes_on_druid"
-  add_index "editstore_changes", ["item_id"], :name => "index_editstore_changes_on_item_id"
   add_index "editstore_changes", ["project_id"], :name => "index_editstore_changes_on_project_id"
   add_index "editstore_changes", ["state_id"], :name => "index_editstore_changes_on_state_id"
 
@@ -42,14 +40,6 @@ ActiveRecord::Schema.define(:version => 20131028221958) do
   end
 
   add_index "editstore_fields", ["project_id"], :name => "index_editstore_fields_on_project_id"
-
-  create_table "editstore_items", :force => true do |t|
-    t.string   "druid",      :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "editstore_items", ["druid"], :name => "index_editstore_items_on_druid"
 
   create_table "editstore_object_locks", :force => true do |t|
     t.string   "druid",        :null => false

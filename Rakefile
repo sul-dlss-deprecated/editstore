@@ -29,4 +29,10 @@ Bundler::GemHelper.install_tasks
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+task :ci do
+  ENV['RAILS_ENV'] = "test"
+  Rake::Task["db:migrate"].invoke
+  Rake::Task["spec"].invoke
+end
+
+task :default => :ci
