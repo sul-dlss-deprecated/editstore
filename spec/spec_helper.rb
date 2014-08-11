@@ -13,7 +13,7 @@ Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each {|f| require f }
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.global_fixtures = :all
-  config.fixture_path = "#{::Rails.root}/../../test/fixtures/editstore"
+  config.fixture_path = "#{::Rails.root}/../../spec/fixtures/editstore"
 end
 
 def generate_changes(num,druid)

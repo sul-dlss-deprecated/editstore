@@ -24,18 +24,15 @@ end
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load 'rails/tasks/engine.rake'
 
-
-
 Bundler::GemHelper.install_tasks
 
-require 'rake/testtask'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = false
+task :ci do
+  ENV['RAILS_ENV'] = "test"
+  Rake::Task["db:migrate"].invoke
+  Rake::Task["spec"].invoke
 end
 
-
-task :default => :test
+task :default => :ci
