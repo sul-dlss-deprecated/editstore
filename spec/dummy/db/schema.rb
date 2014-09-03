@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131017165120) do
+ActiveRecord::Schema.define(:version => 20140903192323) do
 
   create_table "editstore_changes", :force => true do |t|
     t.integer  "project_id",                     :null => false
