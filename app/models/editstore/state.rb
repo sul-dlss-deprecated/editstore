@@ -1,6 +1,7 @@
 module Editstore
   class State < Connection
      #has_many :changes
+     #RAILS 4 ALIAS
      has_many :alterations, :foreign_key => :changes  #Using an alias and pointed to changes
     
      #attr_accessible :name
