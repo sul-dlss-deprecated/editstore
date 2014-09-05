@@ -1,7 +1,13 @@
 module Editstore
   class State < Connection
-     has_many :changes
-     attr_accessible :name
+     #has_many :changes
+     has_many :alterations, :foreign_key => 'changes_id'  #Using an alias and pointed to changes
+    
+     #attr_accessible :name
+     def editstore_params
+          params.require(:editstore).permit(:name)
+     end
+     
      validates :name, presence: true
 
      # these helper methods allow you to easily refer to a particular state like this, with the query cached in the object:

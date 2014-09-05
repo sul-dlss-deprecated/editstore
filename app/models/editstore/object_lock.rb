@@ -1,6 +1,10 @@
 module Editstore
   class ObjectLock < Connection
-    attr_accessible :locked, :druid
+    #attr_accessible :locked, :druid
+    
+    def objectlock_params
+         params.require(:objectlock).permit(:locked, :druid)
+    end
   
     def self.prune_all
       self.destroy_all(:locked=>nil) # anything that is not locked

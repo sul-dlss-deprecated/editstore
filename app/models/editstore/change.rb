@@ -5,7 +5,11 @@ module Editstore
     belongs_to :state
     belongs_to :project
     belongs_to :object_lock, :primary_key=>:druid, :foreign_key=>:druid
-    attr_accessible :field,:project_id,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error,:pending
+    #attr_accessible :field,:project_id,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error,:pending
+
+    def change_params
+         params.require(:change).permit(:field,:project_id,:old_value,:new_value,:operation,:client_note,:druid,:state_id,:error,:pending)
+    end
 
     OPERATIONS=%w{create update delete}
     

@@ -1,6 +1,10 @@
 module Editstore
   class RunLog < Connection
-    attr_accessible :started,:ended,:total_druids,:total_changes,:num_errors,:num_pending,:note
+    #attr_accessible :started,:ended,:total_druids,:total_changes,:num_errors,:num_pending,:note
+    
+    def runlog_params
+         params.require(:runlog).permit(:started,:ended,:total_druids,:total_changes,:num_errors,:num_pending,:note)
+    end
     def self.currently_running
       Editstore::RunLog.where(:ended=>nil).order('ended DESC')
     end
