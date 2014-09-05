@@ -33,7 +33,8 @@ module Editstore
     
     def self.by_project_id(project_id)
       if project_id.to_s.empty?
-        scoped
+        #scoped
+        where(nil)
       else
         where(:project_id=>project_id)
       end
@@ -41,7 +42,8 @@ module Editstore
 
     def self.by_state_id(state_id)
       if state_id.to_s.empty?
-        scoped
+        #scoped
+        where(nil)
       else
         where(:state_id=>state_id)
       end
@@ -56,7 +58,8 @@ module Editstore
       project_id=params[:project_id]
       druid=params[:druid]
        
-      changes = scoped
+      #changes = scoped
+      changes = where(nil)
       changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id) if state_id != '*'
       changes = changes.where(:project_id=>project_id) if project_id
@@ -74,7 +77,8 @@ module Editstore
       limit=params[:limit]
       project_id=params[:project_id]
       
-      changes = scoped
+      #changes = scoped
+      changes = where(nil)
       changes = changes.includes(:project)
       changes = changes.where(:state_id=>state_id) if state_id != '*'
       changes = changes.where(:project_id=>project_id) if project_id
