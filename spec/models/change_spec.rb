@@ -136,12 +136,12 @@ describe Editstore::Change, :type => :model do
     generate_changes(3,druids[1])
 
     changes=Editstore::Change.latest(:druid=>druids[0])
-    expect(changes.class).to eq(Editstore::Change::ActiveRecord::Relation)
+    expect(changes.class).to eq(Editstore::Change::ActiveRecord_Relation)
     expect(changes.size).to eq(5)
     changes.each {|change| expect(change.class).to eq(Editstore::Change)}
 
     changes=Editstore::Change.latest(:druid=>druids[1])
-    expect(changes.class).to eq(ActiveRecord::Relation)
+    expect(changes.class).to eq(Editstore::Change::ActiveRecord_Relation)
     expect(changes.size).to eq(3)
     changes.each {|change| expect(change.class).to eq(Editstore::Change)}
     

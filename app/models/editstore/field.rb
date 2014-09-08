@@ -1,9 +1,10 @@
 module Editstore
   class Field < Connection
     belongs_to :project
-    #attr_accessible :project_id,:name
-    def field_params
-         params.require(:field).permit(:project_id,:name)
-    end
+
+    # THESE REALLY BELONG IN THE CONTROLLER and are only necessary for mass assignment
+    # def field_params
+    #      params.require(:field).permit(:project_id,:name)
+    # end
   end
 end

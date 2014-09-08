@@ -1,10 +1,10 @@
 module Editstore
   class ObjectLock < Connection
-    #attr_accessible :locked, :druid
-    
-    def objectlock_params
-         params.require(:objectlock).permit(:locked, :druid)
-    end
+
+    # THESE REALLY BELONG IN THE CONTROLLER and are only necessary for mass assignment
+    # def objectlock_params
+    #      params.require(:objectlock).permit(:locked, :druid)
+    # end
   
     def self.prune_all
       self.destroy_all(:locked=>nil) # anything that is not locked

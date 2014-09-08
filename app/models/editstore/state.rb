@@ -1,13 +1,12 @@
 module Editstore
   class State < Connection
-     #has_many :changes
-     #RAILS 4 ALIAS
+
      has_many :alterations, :foreign_key => :changes  #Using an alias and pointed to changes
-    
-     #attr_accessible :name
-     def editstore_params
-          params.require(:editstore).permit(:name)
-     end
+
+     # THESE REALLY BELONG IN THE CONTROLLER and are only necessary for mass assignment    
+     # def editstore_params
+     #      params.require(:editstore).permit(:name)
+     # end
      
      validates :name, presence: true
 
