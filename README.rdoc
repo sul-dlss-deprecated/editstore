@@ -182,4 +182,9 @@ run the standard rspec tests:
 	cd ./spec/dummy && rake editstore:install:migrations && rake db:migrate RAILS_ENV=test && cd ../..
 	bundle exec rspec
 	
-	
+== Building and Pushing Gem to RubyGems
+
+You will need to have an account on RubyGems and be listed as an owner for this gem.
+
+gem build editstore.gemspec
+gem push edistore-X.Y.Z.gem
