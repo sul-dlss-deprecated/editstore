@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["pmangiafico@stanford.edu"]
   s.homepage    = ""
   s.summary     = "The editstore gem is used by client web applications (like Revs Digital Library) to stage changes to descriptive metadata in DOR"
-  s.description = "The editstore gem is a Rails engine, including all models and migrations needed to connect to the editstore database for caching descriptive metadata edits.  Editstore 2.x is compatible with Rails 4.x.  Edistore 1.x is comptaible with Rails 3.x."
+  s.description = "The editstore gem is a Rails engine, including all models and migrations needed to connect to the editstore database for caching descriptive metadata edits.  Editstore 2.x is compatible with Rails 4.y.  Edistore 1.x is comptaible with Rails 3.y."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
