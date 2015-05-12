@@ -1,7 +1,7 @@
 module Editstore
   class Project < Connection
 
-     has_many :alterations, :dependent => :destroy, :foreign_key => :changes     
+     has_many :alterations, :foreign_key => 'project_id', :class_name=>'Change', :dependent => :destroy
      has_many :fields, :dependent => :destroy
      
      # THESE REALLY BELONG IN THE CONTROLLER and are only necessary for mass assignment

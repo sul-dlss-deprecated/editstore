@@ -1,7 +1,7 @@
 module Editstore
   class State < Connection
 
-     has_many :alterations, :foreign_key => :changes  #Using an alias and pointed to changes
+     has_many :alterations, :foreign_key => 'state_id', :class_name=>'Change'  #Using an alias and pointed to changes
 
      # THESE REALLY BELONG IN THE CONTROLLER and are only necessary for mass assignment    
      # def editstore_params
