@@ -11,9 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140903192323) do
+ActiveRecord::Schema.define(version: 20131017165120) do
 
-  create_table "editstore_changes", force: true do |t|
+  create_table "editstore_changes", force: :cascade do |t|
     t.integer  "project_id",                  null: false
     t.string   "field",                       null: false
     t.string   "druid",                       null: false
@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 20140903192323) do
     t.string   "operation",                   null: false
     t.integer  "state_id",                    null: false
     t.text     "client_note"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "error"
     t.boolean  "pending",     default: false
   end
@@ -32,34 +32,34 @@ ActiveRecord::Schema.define(version: 20140903192323) do
   add_index "editstore_changes", ["project_id"], name: "index_editstore_changes_on_project_id"
   add_index "editstore_changes", ["state_id"], name: "index_editstore_changes_on_state_id"
 
-  create_table "editstore_fields", force: true do |t|
+  create_table "editstore_fields", force: :cascade do |t|
     t.integer  "project_id", null: false
     t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "editstore_fields", ["project_id"], name: "index_editstore_fields_on_project_id"
 
-  create_table "editstore_object_locks", force: true do |t|
+  create_table "editstore_object_locks", force: :cascade do |t|
     t.string   "druid",        null: false
     t.datetime "locked"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "lock_version"
   end
 
   add_index "editstore_object_locks", ["druid"], name: "index_editstore_object_locks_on_druid"
   add_index "editstore_object_locks", ["locked"], name: "index_editstore_object_locks_on_locked"
 
-  create_table "editstore_projects", force: true do |t|
+  create_table "editstore_projects", force: :cascade do |t|
     t.string   "name",       null: false
     t.string   "template",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "editstore_run_logs", force: true do |t|
+  create_table "editstore_run_logs", force: :cascade do |t|
     t.integer  "total_druids"
     t.integer  "total_changes"
     t.integer  "num_errors"
@@ -67,14 +67,14 @@ ActiveRecord::Schema.define(version: 20140903192323) do
     t.string   "note"
     t.datetime "started"
     t.datetime "ended"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "editstore_states", force: true do |t|
+  create_table "editstore_states", force: :cascade do |t|
     t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

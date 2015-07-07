@@ -11,7 +11,7 @@ class CreateEditstoreChanges < ActiveRecord::Migration
         t.string  :operation, :null=>false
         t.integer :state_id, :null=>false
         t.text    :client_note
-        t.timestamps
+        t.timestamps :null=>true
       end
     end
   end

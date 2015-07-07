@@ -4,7 +4,7 @@ class CreateEditstoreStates < ActiveRecord::Migration
       @connection=Editstore::Connection.connection
       create_table :editstore_states do |t|
         t.string  :name, :null=>false
-        t.timestamps
+        t.timestamps :null=>true
       end
       Editstore::State.create(:id=>1,:name=>'wait')
       Editstore::State.create(:id=>2,:name=>'ready')
