@@ -11,7 +11,6 @@ It provides models that allow your client web application to cache descriptive m
 
 1. Add the following to your application's 'Gemfile':
 
-  source 'http://sul-gems.stanford.edu'  # only if you don't already have it
   gem 'editstore'
 
 2. Install the gem
