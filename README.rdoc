@@ -1,3 +1,6 @@
+{<img src="https://travis-ci.org/sul-dlss/editstore.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/sul-dlss/editstore]
+{<img src="https://coveralls.io/repos/github/sul-dlss/editstore/badge.svg?branch=master" alt="Coverage Status" />}[https://coveralls.io/github/sul-dlss/editstore?branch=master]
+
 = Editstore
 
 This project uses MIT-LICENSE.
@@ -8,63 +11,60 @@ It provides models that allow your client web application to cache descriptive m
 
 1. Add the following to your application's 'Gemfile':
 
-	source 'http://sul-gems.stanford.edu'  # only if you don't already have it
-	gem 'editstore'
+  source 'http://sul-gems.stanford.edu'  # only if you don't already have it
+  gem 'editstore'
 
 2. Install the gem
 
-	bundle install
+  bundle install
 
 3. Add the migrations to your app
 
-	rake editstore:install:migrations
+  rake editstore:install:migrations
 
 4. Add development and test database connection stings to the 'database.yml' file in your app for development/test:
 
-	editstore_development:
-	  adapter: sqlite3
-	  database: db/editstore_development.sqlite3
-	  pool: 5
-	  timeout: 5000
-    
-	editstore_test:
-	  adapter: sqlite3
-	  database: db/editstore_test.sqlite3
-	  pool: 5
-	  timeout: 5000
+  editstore_development:
+    adapter: sqlite3
+    database: db/editstore_development.sqlite3
+    pool: 5
+    timeout: 5000
 
-	editstore_production:
-	  adapter: mysql2
-	  database: # GET IT FROM FRIENDLY SYSADMIN IF YOU NEED IT FOR PRODUCTION
+  editstore_test:
+     adapter: sqlite3
+     database: db/editstore_test.sqlite3
+     pool: 5
+     timeout: 5000
+
+  editstore_production:
+     adapter: mysql2
+     database: # GET IT FROM FRIENDLY SYSADMIN IF YOU NEED IT FOR PRODUCTION
 
 5. Generate a migration to store your project specific name and fields in your own test/dev databases:
 
-	rails g migration editstore_myproject
+  rails g migration editstore_myproject
 
 6. Edit your migration to add your project name and fields.  Be sure to have the migration use the correct Editstore database
-connection string as shown below.  For servers (e.g. staging, production), these changes be done after your creating your template and running the 
-rake editstore:update_editstore_config RAILS_ENV=environment task.
+connection string as shown below.  For servers (e.g. staging, production), these changes be done after your creating your template and running the
 
-By default, migrations such as this should only run in development and test mode.  By adding the "if Editstore.run_migrations?" qualifier, you will
-ensure you will not get the migrations except in development and test.  The reason is that in staging and production the actual editstore database
-will already be properly configured when you setup the project and do not want these migrations run again on the production servers during
-deployment.  However, since locally you are not running an actual correctly configured instance of the editstore system, these migrations give you
-enough information to make the app work in development.
+  rake editstore:update_editstore_config RAILS_ENV=environment task.
+
+By default, migrations such as this should only run in development and test mode.  By adding the "if Editstore.run_migrations?" qualifier, you will ensure you will not get the migrations except in development and test.  The reason is that in staging and production the actual editstore database will already be properly configured when you setup the project and do not want these migrations run again on the production servers during deployment.  However, since locally you are not running an actual correctly configured instance of the editstore system, these migrations give you enough information to make the app work in development.
 
 An example of this migration you need to add is shown below:
 
-	def up
-	  if Editstore.run_migrations?
-  	  @connection=Editstore::Connection.connection
-  	  project=Editstore::Project.create(:name=>'Revs',:template=>'revs')
-  	  Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
-  	  Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
+  def up
+    if Editstore.run_migrations?
+      @connection=Editstore::Connection.connection
+      project=Editstore::Project.create(:name=>'Revs',:template=>'revs')
+      Editstore::Field.create(:name=>'title_tsi',:project_id=>project.id)
+      Editstore::Field.create(:name=>'pub_year_isim',:project_id=>project.id)
     end
-	end
+  end
 
 7. Run the migrations
 
-	rake db:migrate 
+  rake db:migrate
 
 == Usage
 
@@ -72,7 +72,7 @@ An example of this migration you need to add is shown below:
 editstore database , the gem will automatically associated all updates with your project.  A good spot to set this
 constant in a Rails app is at the bottom of the 'config/application.rb' file, e.g.
 
-	EDITSTORE_PROJECT='Revs'  
+  EDITSTORE_PROJECT='Revs'
 
 2. In the application, to apply an update to DOR, you just need to create a new "Editstore::Change" object and save it.
 If your application needs to update a local SOLR or MySQL, you will need to do this yourself.  This object just saves
@@ -90,101 +90,100 @@ The properties you need to set are:
 								  -- if you set to 'wait', you will need to keep track of the change yourself (probably using the object ID once it is saved)
 								     so you can come and update the state later to 'ready' when you want the change propagated.  This might happen if you
 								     have curated changes
-								
-  field       : a valid field name defined in your project template and listed in the 'fields' table of the editstore database for your project
+
+        field       : a valid field name defined in your project template and listed in the 'fields' table of the editstore database for your project
 	druid       : the druid of the object you want to update (can include or not include the 'druid:' prefix)
 	client_note : an optional note you can set for your application purposes only
 
 Some examples are below:
 
 	a. Add a new value:
-	
+
 		add=Editstore::Change.new
 		add.new_value='new value'
 		add.operation=:create
-		add.state=Editstore::State.ready 
+		add.state=Editstore::State.ready
 		#add.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
 		add.field='title'
 		add.druid='druid:oo000oo0001'
-		add.client_note='some note' 
+		add.client_note='some note'
 		add.save
-		
+
 	b. Change an existing value:
 
 	  change=Editstore::Change.new
-		change.new_value='new value' 
-		change.old_value='previous value' 
+		change.new_value='new value'
+		change.old_value='previous value'
 		change.operation=:update
-		change.state=Editstore::State.ready 
+		change.state=Editstore::State.ready
 		#change.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
-		change.field='title' 
+		change.field='title'
 		change.druid='druid:oo000oo0001'
-		change.client_note='some note' 
+		change.client_note='some note'
 		change.save
-		
+
 	c. Delete an existing value (useful to delete just value in a multivalued field):
 
 	  delete=Editstore::Change.new
 		delete.old_value='value to delete'
 		delete.operation=:delete
-		delete.state=Editstore::State.ready 
+		delete.state=Editstore::State.ready
 		#delete.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
-		delete.field='title' 
+		delete.field='title'
 		delete.druid='druid:oo000oo0001'
-		delete.client_note='some note' 
-		delete.save		
+		delete.client_note='some note'
+		delete.save
 
 	d. Delete all existing values (can be used for either a single valued field or can be used to delete *all* values in a multivalued field):
-	
+
 		# just leave off the 'old_value' attribute to delete any values associated with this field
 		delete=Editstore::Change.new
 		delete.operation=:delete
-		delete.state=Editstore::State.ready 
+		delete.state=Editstore::State.ready
 		#delete.project_id=1 # you can leave this off if you set the EDITSTORE_PROJECT constant as describe above
-		delete.field='title' 
+		delete.field='title'
 		delete.druid='druid:oo000oo0001'
-		delete.client_note='some note' 
+		delete.client_note='some note'
 		delete.save
-					
+
 == Useful Cleanup Tasks
 
 When running in development mode, you will get a lot of unprocessed changes building up in the development
 editstore database (since you won't have the back-end system processing them and cleaning them out).  To clean out
 entries from the editstore database:
 
-	rake editstore:remove_pending
-	
+  rake editstore:remove_pending
+
 In production, you can also use this task to clean out any rows that have been marked as completed:
 
-	rake editstore:remove_complete
-	
+  rake editstore:remove_complete
+
 Use this task to clear out the unlocked druids from the object lock table.  Should be safe to run at any time.
 
   rake editstore:prune_locks # prune any unlocked druids older than 1 month
   rake editstore:prune_locks_all   # prune all unlocked druids
-  
-Use this task to clear out the locked druids from the object lock table.  Should only be run if you are sure locks have hung and 
+
+Use this task to clear out the locked druids from the object lock table.  Should only be run if you are sure locks have hung and
 there are no other processes running.
 
-  rake editstore:clear_locks  
+  rake editstore:clear_locks
 
 Use this task to clear out the any log run entries older than one month. Should be safe to run at any time if you don't need more than 1 month of run log history
 
   rake editstore:prune_run_log # prune any run logs older than 1 month and any run logs older than 24 hours with no activity
   rake editstore:prune_run_log_all # prune any run logs that are not in process
-  
-    	
+
+
 == Running Tests
 
 There is a "dummy" rails app in "spec/dummy" that is used for testing.  To run the tests, run the migrations and then
 run the standard rspec tests:
 
-	cd ./spec/dummy && rake editstore:install:migrations && rake db:migrate RAILS_ENV=test && cd ../..
-	bundle exec rspec
-	
+  cd ./spec/dummy && rake editstore:install:migrations && rake db:migrate RAILS_ENV=test && cd ../..
+  bundle exec rspec
+
 == Building and Pushing Gem to RubyGems
 
 You will need to have an account on RubyGems and be listed as an owner for this gem.
 
-gem build editstore.gemspec
-gem push edistore-X.Y.Z.gem
+  rake release

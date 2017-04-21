@@ -1,8 +1,12 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
+require 'coveralls'
+Coveralls.wear!
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
 require 'rspec/rails'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter,Coveralls::SimpleCov::Formatter])
 
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
 
