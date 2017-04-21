@@ -84,7 +84,7 @@ module Editstore
       changes = changes.where(:project_id=>project_id) if project_id
       changes = changes.order('editstore_changes.created_at,editstore_changes.id asc')
       changes = changes.limit(limit) unless limit.blank?
-      changes.uniq.pluck(:druid)
+      changes.distinct.pluck(:druid)
 
     end
     
