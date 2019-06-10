@@ -1,5 +1,5 @@
-class CreateEditstoreProjects < ActiveRecord::Migration
-    
+class CreateEditstoreProjects < ActiveRecord::Migration[4.2]
+
   def change
     if Editstore.run_migrations?
       @connection=Editstore::Connection.connection
@@ -11,5 +11,5 @@ class CreateEditstoreProjects < ActiveRecord::Migration
       Editstore::Project.create(:id=>1,:name=>'Generic',:template=>'generic')
     end
   end
-  
+
 end

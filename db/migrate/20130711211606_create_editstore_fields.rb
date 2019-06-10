@@ -1,4 +1,4 @@
-class CreateEditstoreFields < ActiveRecord::Migration
+class CreateEditstoreFields < ActiveRecord::Migration[4.2]
   def change
     if Editstore.run_migrations?
       @connection=Editstore::Connection.connection
@@ -8,7 +8,7 @@ class CreateEditstoreFields < ActiveRecord::Migration
         t.timestamps :null=>true
       end
       Editstore::Field.create(:id=>1,:name=>'title',:project_id=>'1')
-      Editstore::Field.create(:id=>2,:name=>'description',:project_id=>'1')    
+      Editstore::Field.create(:id=>2,:name=>'description',:project_id=>'1')
     end
   end
 end

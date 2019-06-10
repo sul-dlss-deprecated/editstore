@@ -1,4 +1,4 @@
-class AddIndices < ActiveRecord::Migration
+class AddIndices < ActiveRecord::Migration[4.2]
   def up
     if Editstore.run_migrations?
       @connection=Editstore::Connection.connection
