@@ -1,4 +1,4 @@
-class AddLockingVersion < ActiveRecord::Migration
+class AddLockingVersion < ActiveRecord::Migration[4.2]
   def change
     if Editstore.run_migrations?
       @connection=Editstore::Connection.connection

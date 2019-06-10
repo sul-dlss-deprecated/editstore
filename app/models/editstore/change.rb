@@ -1,6 +1,6 @@
 module Editstore
   require 'druid-tools'
-  
+
   class Change < Connection
     belongs_to :state
     belongs_to :project
@@ -12,11 +12,11 @@ module Editstore
     # end
 
     OPERATIONS=%w{create update delete}
-    
+
     validates :field, presence: true
     validates :operation, presence: true
-    validates :new_value, presence: true, :if => "%w{update create}.include? self.operation.to_s"
-    validates :old_value, presence: true, :if => "%w{update}.include? self.operation.to_s"
+    validates :new_value, presence: true, :if => Proc.new{ %w(update create).include? self.operation.to_s }
+    validates :old_value, presence: true, :if => Proc.new{ 'update'.include? self.operation.to_s }
     validates :project_id, presence: true, numericality: { only_integer: true }
     validates :state_id, presence: true, numericality: { only_integer: true }
     validate :valid_state_id
@@ -24,13 +24,13 @@ module Editstore
     validate :valid_field_name
     validate :valid_druid
     validate :valid_operation
-    
-    before_validation :set_default_project, :if => "defined?(EDITSTORE_PROJECT) && !EDITSTORE_PROJECT.nil?" # this allows the user to set this in their project so it will set automatically for each change
-    
+
+    before_validation :set_default_project, :if => Proc.new{ defined?(EDITSTORE_PROJECT) && !EDITSTORE_PROJECT.nil? }# this allows the user to set this in their project so it will set automatically for each change
+
     def self.prune
-      self.destroy_all(:state_id=>Editstore::State.complete)  
+      self.destroy_all(:state_id=>Editstore::State.complete)
     end
-    
+
     def self.by_project_id(project_id)
       if project_id.to_s.empty?
         #scoped
@@ -57,7 +57,7 @@ module Editstore
       limit=params[:limit]
       project_id=params[:project_id]
       druid=params[:druid]
-       
+
       #changes = scoped
       changes = where(nil)
       changes = changes.includes(:project)
@@ -67,16 +67,16 @@ module Editstore
       changes = changes.order('created_at,id asc')
       changes = changes.limit(limit) unless limit.blank?
       druid ? changes : changes.group_by {|c| c.druid}
-     
+
     end
-    
+
     # get the latest list of unique druids to process for a specific state (defaults to ready) and an optional limit, return an array
     def self.latest_druids(params={})
 
       state_id=params[:state_id] || Editstore::State.ready.id
       limit=params[:limit]
       project_id=params[:project_id]
-      
+
       #changes = scoped
       changes = where(nil)
       changes = changes.includes(:project)
@@ -84,33 +84,33 @@ module Editstore
       changes = changes.where(:project_id=>project_id) if project_id
       changes = changes.order('editstore_changes.created_at,editstore_changes.id asc')
       changes = changes.limit(limit) unless limit.blank?
-      changes.distinct.pluck(:druid)
+      changes.distinct.pluck('druid').uniq
 
     end
-    
+
     private
     def valid_operation
-      errors.add(:operation, "is not valid") unless OPERATIONS.include? operation.to_s  
+      errors.add(:operation, "is not valid") unless OPERATIONS.include? operation.to_s
     end
-    
+
     # project name is case insensitive
     def set_default_project
       default_project = Editstore::Project.where('lower(name)=?',EDITSTORE_PROJECT.downcase).limit(1)
       self.project_id = default_project.first.id if (default_project.size == 1 && !self.project_id)
     end
-    
+
     def valid_druid
       if !DruidTools::Druid.valid?(self.druid)
         errors.add(:druid,"is invalid")
       end
     end
-    
+
     def valid_field_name
       if Editstore::Field.where(:name=>self.field,:project_id=>self.project_id).count == 0
         errors.add(:field, "is invalid")
-      end      
+      end
     end
-    
+
     def valid_state_id
       if !Editstore::State.exists?(self.state_id)
         errors.add(:state_id, "is invalid")
@@ -122,6 +122,6 @@ module Editstore
         errors.add(:project_id, "is invalid")
       end
     end
-        
+
   end
 end

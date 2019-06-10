@@ -1,4 +1,4 @@
-class CreateEditstoreStates < ActiveRecord::Migration
+class CreateEditstoreStates < ActiveRecord::Migration[4.2]
   def change
     if Editstore.run_migrations?
       @connection=Editstore::Connection.connection
@@ -11,7 +11,7 @@ class CreateEditstoreStates < ActiveRecord::Migration
       Editstore::State.create(:id=>3,:name=>'in process')
       Editstore::State.create(:id=>4,:name=>'error')
       Editstore::State.create(:id=>5,:name=>'applied')
-      Editstore::State.create(:id=>6,:name=>'complete')    
+      Editstore::State.create(:id=>6,:name=>'complete')
     end
   end
 end
